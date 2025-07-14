@@ -4,6 +4,10 @@
 #include "raylib.h"
 #include "./include/menu.h"
 
+#define CLAMP(val, min, max) ((val) < (min) ? (min) : ((val) > (max) ? (max) : (val)))
+#define SetTimeScale(scale) (timeScale = scale)
+
+
 // CONSTANTS
 const int screenWidth = 800;
 const int screenHeight = 540;
@@ -13,6 +17,8 @@ Vector2 scaleObject = {1.0f, 1.5f};
 // GLOBAL VARIABLES
 Font robotoFont;
 Music music1;
+Sound hitPaddleFX;
+
 
 int p1Score = 0;
 int p2Score = 0;
@@ -23,9 +29,6 @@ bool ballInP2Goal = false;
 float timeScale = 1.0f;
 float slowMoTarget = 1.0f;
 float slowMoSpeed = 1.5f;
-
-#define CLAMP(val, min, max) ((val) < (min) ? (min) : ((val) > (max) ? (max) : (val)))
-#define SetTimeScale(scale) (timeScale = scale)
 
 struct GameObject
 {
@@ -62,10 +65,11 @@ int main(void)
     SetExitKey(KEY_NULL);
 
     GameScreen currentScreen = MENU;
+    GameScreen lastScreen = MENU;
 
     robotoFont = LoadFont("resources/font/roboto.ttf");
     music1 = LoadMusicStream("resources/sfx/music/music1.ogg");
-
+    hitPaddleFX = LoadSound("resources/sfx/hitPaddleFX.wav")    ;
     if (WindowShouldClose())
     {
         TraceLog(LOG_ERROR, "Window initialization failed!");
@@ -162,10 +166,11 @@ int main(void)
             }
 
             // Scoring logic with slow motion trigger
-            if (CheckCollisionCircleRec(ballPosition, ballRadius, p1Goal))
+            if (CheckCollisionCircleRec(ballPosition, ballRadius, p1Goal) && currentScreen == GAMEPLAY)
             {
                 if (!ballInP1Goal)
                 {
+                    PlaySound(hitPaddleFX);
                     p2Score++;
                     ballInP1Goal = true;
                 }
@@ -175,10 +180,11 @@ int main(void)
                 ballInP1Goal = false;
             }
 
-            if (CheckCollisionCircleRec(ballPosition, ballRadius, p2Goal))
+            if (CheckCollisionCircleRec(ballPosition, ballRadius, p2Goal) && currentScreen == GAMEPLAY)
             {
                 if (!ballInP2Goal)
                 {
+                    PlaySound(hitPaddleFX);
                     p1Score++;
                     ballInP2Goal = true;
                 }
@@ -203,8 +209,9 @@ int main(void)
             // Ball collision with paddles - invert x velocity and tweak y velocity for bounce angle
             if (CheckCollisionCircleRec(ballPosition, ballRadius, player1Rect) && ballVelocity.x < 0)
             {
+                PlaySound(hitPaddleFX);
                 ballVelocity.x *= -1;
-
+                
                 float dy = (ballPosition.y - (player1Rect.y + player1Rect.height / 2)) / (player1Rect.height / 2);
                 ballVelocity.y = dy * 250;
 
@@ -213,12 +220,17 @@ int main(void)
 
             if (CheckCollisionCircleRec(ballPosition, ballRadius, player2Rect) && ballVelocity.x > 0)
             {
+                PlaySound(hitPaddleFX);
                 ballVelocity.x *= -1;
 
                 float dy = (ballPosition.y - (player2Rect.y + player2Rect.height / 2)) / (player2Rect.height / 2);
                 ballVelocity.y = dy * 250;
 
                 ballPosition.x = player2Rect.x - ballRadius;
+            }
+        
+            if (lastScreen == MENU) {
+              ResetScore();
             }
         }
 
@@ -264,10 +276,11 @@ int main(void)
                 DrawRectangle(0, 0, screenWidth, screenHeight, Fade(BLACK, 0.5f));
                 DrawText("PAUSED", screenWidth / 2 - 100, screenHeight / 2 - 50, 50, GREEN);
                 DrawText("Press [P] to Resume", screenWidth / 2 - 120, screenHeight / 2 + 20, 20, GRAY);
-                DrawText("Press [Q] to Exit to Start Menu", screenWidth / 2 - 120, screenHeight / 2 + 40, 20, GRAY);
+                DrawText("Press [Q] to Exit to Start Menu", screenWidth / 2 - 120, screenHeight / 2 + 60, 20, GRAY);
                 if (IsKeyPressed(KEY_Q))
                 {
                     currentScreen = MENU;
+                    lastScreen = GAMEPLAY;
                 }
                 SetMusicVolume(music1, 0.1f);
             }
@@ -278,21 +291,6 @@ int main(void)
             break;
 
         case EXIT:
-            static float exitTimer = 0.0f;
-            static float fade = 0.0f;
-
-            // Gradually increase the fade to black
-            exitTimer += GetFrameTime();
-            if (fade < 1.0f)
-                fade += GetFrameTime() * 0.5f;
-
-            DrawText("Thanks for playing!", screenWidth / 2 - MeasureText("Thanks for playing!", 30) / 2, screenHeight / 2 - 15, 30, RAYWHITE);
-            DrawRectangle(0, 0, screenWidth, screenHeight, (Color){0, 0, 0, (unsigned char)(fade * 255)});
-
-            // After 3 seconds, break out of the loop
-            if (exitTimer >= 3.0f)
-                CloseWindow();
-
             break;
         }
         EndDrawing();
@@ -304,6 +302,6 @@ int main(void)
     UnloadTexture(player2.texture);
     UnloadFont(robotoFont);
     CloseAudioDevice();
-
+    CloseWindow();
     return 0;
 }
