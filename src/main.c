@@ -69,7 +69,7 @@ void ResetGame(struct GameObject *player1, struct GameObject *player2,
 
 int main(void) {
   SetConfigFlags(FLAG_WINDOW_HIGHDPI | FLAG_WINDOW_ALWAYS_RUN);
-  InitWindow(screenWidth, screenHeight, "Poong");
+  InitWindow(screenWidth, screenHeight, "Ray Pong");
   InitAudioDevice();
   SetExitKey(KEY_NULL);
 
@@ -89,7 +89,7 @@ int main(void) {
   // -- Player Setup --
   struct GameObject player1 = {
       .name = "Blaise", .speed = 500, .position = {100.0f, 100.0f}};
-  struct GameObject player2 = {.name = "Dick_Head",
+  struct GameObject player2 = {.name = "Big_Head",
                                .speed = 700,
                                .position = {screenWidth - 100.0f, 100.0f}};
 
@@ -116,7 +116,7 @@ int main(void) {
   Rectangle p2Goal = {player2.position.x + 95, screenHeight / 2.0f - 300, 5,
                       1000};
 
-  SetTargetFPS(120);
+  SetTargetFPS(60);
 
   while (!WindowShouldClose() && currentScreen != EXIT) {
     // Get unscaled delta time (seconds since last frame)
@@ -140,7 +140,7 @@ int main(void) {
     float deltaTime = realDelta * timeScale;
 
     // Pause toggle
-    if (IsKeyPressed(KEY_P)) {
+    if (IsKeyPressed(KEY_P) || IsKeyPressed(KEY_ESCAPE)) {
       isGamePaused = !isGamePaused;
     }
 
@@ -250,8 +250,8 @@ int main(void) {
 
     BeginDrawing();
     ClearBackground(BLACK);
-    // Draw FPS using your font helper
-    DisplayText(robotoFont, 20, RAYWHITE, (Vector2){10, 10});
+    // DisplayText(robotoFont, 20, RAYWHITE, (Vector2){10, 10}); #Custom
+    // function to draw FPS -- uncomment if you want to see your fps
 
     switch (currentScreen) {
     case MENU:
@@ -273,9 +273,9 @@ int main(void) {
       DrawCircleV(ballPosition, ballRadius, WHITE);
 
       // Draw scores
-      DrawText(TextFormat("%d", p1Score), 300, 20, 20, WHITE);
-      DrawText(" - ", 365, 20, 50, WHITE);
-      DrawText(TextFormat("%d", p2Score), 500, 20, 20, WHITE);
+      DrawText(TextFormat("%d", p1Score), 300, 20, 100, WHITE);
+      DrawText(" - ", 365, 90, 50, WHITE);
+      DrawText(TextFormat("%d", p2Score), 450, 20, 100, WHITE);
 
       // Draw player labels above paddles
       // DrawText("Player: 1", player1.position.x, player1.position.y - 30, 20,
