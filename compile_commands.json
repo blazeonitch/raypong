@@ -1,0 +1,32 @@
+[
+  {
+    "arguments": [
+      "/sbin/gcc",
+      "-c",
+      "-std=c11",
+      "-Isrc/include",
+      "-I/home/blaze/vcpkg/installed/x64-linux/include",
+      "-o",
+      "builds/main",
+      "src/main.c"
+    ],
+    "directory": "/home/blaze/_projects/C/cPOONG",
+    "file": "/home/blaze/_projects/C/cPOONG/src/main.c",
+    "output": "/home/blaze/_projects/C/cPOONG/builds/main"
+  },
+  {
+    "arguments": [
+      "/sbin/gcc",
+      "-c",
+      "-std=c11",
+      "-Isrc/include",
+      "-I/home/blaze/vcpkg/installed/x64-linux/include",
+      "-o",
+      "builds/main",
+      "src/menu.c"
+    ],
+    "directory": "/home/blaze/_projects/C/cPOONG",
+    "file": "/home/blaze/_projects/C/cPOONG/src/menu.c",
+    "output": "/home/blaze/_projects/C/cPOONG/builds/main"
+  }
+]
