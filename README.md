@@ -12,8 +12,8 @@ Build with make since cmake hates me ig
 ### SCREENSHOTS
 
 ![Menu](./screenshots/1.png)
-![Game](./screenshots/2.png)
-
+![Game](./screenshots/2.png)  
+![Pause Menu](./screenshots/3.png)
 ---
 # How to play
 Player one:  
