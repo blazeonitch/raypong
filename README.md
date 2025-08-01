@@ -7,7 +7,7 @@ Build with make since cmake hates me ig
     cd builds && ./main #to run execuble
 
     make windows #to build for windows
-    cd builds && ./wmain.exe to run executable
+    cd builds && ./wmain.exe #to run executable
 ```
 ### SCREENSHOTS
 
