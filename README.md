@@ -16,13 +16,13 @@ Build with make since cmake hates me ig
 
 ---
 # How to play
-Player one:
-    W - up
-    S - down 
+Player one:  
+    W - up  
+    S - down  
 
-Player two:
-    Up - umm up?
-    Down - down...
+Player two:  
+    Up - umm up?  
+    Down - down...  
 
 Mouse to navigate main menu,
 P to pause gameplay,
