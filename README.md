@@ -1,5 +1,8 @@
 # Pong clone made with Raylib & C
-
+---
+Check it out on itch!
+[Ray Pong On Itch](https://gamesbyblaze.itch.io/raypong)
+---
 Build with make since cmake hates me ig
 
 ```bash
